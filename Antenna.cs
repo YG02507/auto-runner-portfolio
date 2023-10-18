@@ -5,11 +5,9 @@ public sealed partial class Antenna : MonoBehaviour
     // Const Private Structures
 
     private const float KeepDistance = 9.0f;
+    private const float MaximumRayPathWidth = 0.3f;
+    private const float MinimumRayPathWidth = 0.05f;
     private const float RetreatSpeed = 0.24f;
-
-    // Readonly Private Structure Tuple
-
-    private readonly (float Maximum, float Minimum) RayPathWidth = (0.3f, 0.05f);
 
     // Private Components
 
@@ -90,7 +88,7 @@ public sealed partial class Antenna : MonoBehaviour
     {
         _antennaAmplification.SetBeamPeriod();
 
-        SetRayPathWidth(RayPathWidth.Maximum);
+        SetRayPathWidth(MaximumRayPathWidth);
 
         _antennaTransition.NextStatePerformed = Approach;
     }
@@ -114,9 +112,8 @@ public sealed partial class Antenna : MonoBehaviour
 
         #endregion
 
-        rayPathWidth = (RayPathWidth.Minimum - RayPathWidth.Maximum) * (GameManager.One.Progress - _antennaInstruction.ProgressOffset);
-        rayPathWidth /= KeepDistance - GameManager.One.FocusOffset;
-        rayPathWidth += RayPathWidth.Maximum;
+        rayPathWidth = (MaximumRayPathWidth - MinimumRayPathWidth) * (GameManager.One.Progress - _stingrayInstruction.ProgressOffset);
+        rayPathWidth = MaximumRayPathWidth - rayPathWidth / (_keepDistance - GameManager.One.FocusOffset);
 
         SetRayPathWidth(rayPathWidth);
 
